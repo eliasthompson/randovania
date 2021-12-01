@@ -106,14 +106,9 @@ class GameDescription:
         self._dangerous_resources = None
 
     def create_game_patches(self) -> GamePatches:
-        elevator_connection: Dict[NodeIdentifier, AreaIdentifier] = {
-            self.world_list.identifier_for_node(node): node.default_connection
-
-            for node in self.world_list.all_nodes
-            if isinstance(node, TeleporterNode) and node.editable
-        }
-
-        return GamePatches(None, self.game, {}, elevator_connection, {}, {}, {}, {}, self.starting_location, {})
+        elevator_connection, dock_connection, dock_weakness = self.world_list.create_default_connections()
+        return GamePatches(None, self.game, {}, elevator_connection, dock_connection, dock_weakness, {}, {},
+                           self.starting_location, {})
 
     @property
     def dangerous_resources(self) -> FrozenSet[ResourceInfo]:
