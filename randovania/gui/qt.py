@@ -144,6 +144,13 @@ async def show_game_session(app: QtWidgets.QApplication, options, session_id: in
     app.game_session_window.show()
 
 
+def show_layout_editor(app, options):
+    from randovania.gui.layout_description_editor_window import LayoutDescriptionEditorWindow
+
+    app.layout_editor_window = LayoutDescriptionEditorWindow()
+    app.layout_editor_window.show()
+
+
 async def display_window_for(app, options, command: str, args):
     if command == "tracker":
         await show_tracker(app)
@@ -155,6 +162,8 @@ async def display_window_for(app, options, command: str, args):
         show_game_details(app, options, args.rdvgame)
     elif command == "session":
         await show_game_session(app, options, args.session_id)
+    elif command == "layout_editor":
+        show_layout_editor(app, options)
     else:
         raise RuntimeError(f"Unknown command: {command}")
 
@@ -336,6 +345,9 @@ def create_subparsers(sub_parsers):
     session_parser = gui_parsers.add_parser("session", help="Connects to a game session")
     session_parser.add_argument("session_id", type=int, help="Id of the session")
     session_parser.set_defaults(func=run)
+
+    layout_editor_parser = gui_parsers.add_parser("layout_editor", help="Opens a rdvgame editor")
+    layout_editor_parser.set_defaults(func=run)
 
     def check_command(args):
         if args.command is None:
